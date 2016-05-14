@@ -6,3 +6,6 @@ size_t screen_getcursor_column();
 size_t screen_getcursor_row();
 void screen_clear();
 void screen_colorclear(uint16_t color);
+size_t screen_setcursorpos(size_t y, size_t x);
+void screen_writechar(char c);
+void screen_write(const char* str);

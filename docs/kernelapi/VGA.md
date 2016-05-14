@@ -2,12 +2,24 @@
 
 The VGA driver is a driver that lets you print characters on-screen.
 
+## Functions
+
+### void screen_write(const char* str);
+* Writes a string to the current cursor position
+* `str` The string to print
+
 ### void screen_writestringat(const char* data, size_t index);
+* Writes a string at a certain index
 * `data` A string to print
 * `index` The index on the screen to print, should be created with `screen_createcursorpos(y, x)`.
 
 ### void screen_initialize();
 * Called by the kernel to initialize video memory
+
+### size_t screen_setcursorpos(size_t y, size_t x);
+* Sets the current cursor to a coord
+* `y` The row of the cursor
+* `x` The column of the cursor
 
 ### size_t screen_createcursorpos(size_t y, size_t x);
 * Creates an index of a cursor

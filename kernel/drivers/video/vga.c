@@ -31,6 +31,12 @@ size_t screen_createcursorpos(size_t y, size_t x) {
     return y * VGA_WIDTH + x;
 }
 
+size_t screen_setcursorpos(size_t y, size_t x) {
+    screen_cursor_row = y;
+    screen_cursor_column = x;
+    return y * VGA_WIDTH + x;
+}
+
 size_t screen_currentcursorpos() {
     return screen_cursor_row * VGA_WIDTH + screen_cursor_column;
 }
@@ -66,10 +72,23 @@ void screen_initialize() {
     screen_colorclear(screen_color);
 }
 
-void screen_writechar(char c, size_t cursor) {
+void screen_writechar_at_index(char c, size_t cursor) {
     screen_buffer[cursor] = create_vgaentry(c, screen_color);
 }
 
+void screen_writechar(char c) {
+    screen_writechar_at_index(c, screen_currentcursorpos());
+
+    if(++screen_cursor_column == VGA_WIDTH) {
+        screen_cursor_column = 0; //reset if we reached max width
+        if (++screen_cursor_row == VGA_HEIGHT) { //add to the row if we reached width
+            screen_clear();
+			screen_cursor_row = 0; //if max width, reset screen
+		}
+    }
+}
+
+//TODO: create our libc and move this one
 size_t strlen(const char* str) {
 	size_t out = 0;
 	while (str[out] != 0)
@@ -77,9 +96,16 @@ size_t strlen(const char* str) {
 	return out;
 }
 
+void screen_write(const char* str) {
+    size_t str_length = strlen(str);
+
+    for (size_t i = 0; i < str_length; i++)
+        screen_writechar(str[i]);
+}
+
 void screen_writestringat(const char* data, size_t index) {
 	size_t datalen = strlen(data);
 
 	for (size_t i = 0; i < datalen; i++)
-		screen_writechar(data[i], index + i);
+		screen_writechar_at_index(data[i], index + i);
 }
