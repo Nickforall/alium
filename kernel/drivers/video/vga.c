@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdint.h>
+#include "../ioports.h"
 
 //width/height of the vga driver
 static const size_t VGA_WIDTH = 80;
@@ -31,14 +32,24 @@ size_t screen_createcursorpos(size_t y, size_t x) {
     return y * VGA_WIDTH + x;
 }
 
+size_t screen_currentcursorpos() {
+    return screen_cursor_row * VGA_WIDTH + screen_cursor_column;
+}
+
+void screen_updatecursor() {
+	uint16_t location = screen_currentcursorpos();
+	outb(0x3D4, 14);
+	outb(0x3D5, location >> 8);
+	outb(0x3D4, 15);
+	outb(0x3D5, location);
+}
+
 size_t screen_setcursorpos(size_t y, size_t x) {
     screen_cursor_row = y;
     screen_cursor_column = x;
-    return y * VGA_WIDTH + x;
-}
+    screen_updatecursor();
 
-size_t screen_currentcursorpos() {
-    return screen_cursor_row * VGA_WIDTH + screen_cursor_column;
+    return y * VGA_WIDTH + x;
 }
 
 void screen_clear() {
@@ -86,6 +97,8 @@ void screen_writechar(char c) {
 			screen_cursor_row = 0; //if max width, reset screen
 		}
     }
+
+    screen_updatecursor();
 }
 
 //TODO: create our libc and move this one

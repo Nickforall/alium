@@ -1,7 +1,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "drivers/video/vga.h"
-#include "drivers/ioports.h"
 
 //called by the assembly code in boot.S
 void kernel_main() {
