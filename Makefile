@@ -1,6 +1,6 @@
 C_SOURCES = $(wildcard kernel/*.c)
 HEADERS = $(wildcard kernel/*.h)
-OBJS = kernel/kernel.o kernel/boot.o kernel/drivers/video/vga.o
+OBJS = kernel/kernel.o kernel/boot.o kernel/drivers/video/vga.o kernel/drivers/ioports.o
 
 CC=i686-elf-gcc
 CFLAGS=-std=gnu99 -ffreestanding -O2 -Wall -Wextra
@@ -21,3 +21,4 @@ clean:
 	rm -rf *.bin
 	rm -rf kernel/*.o
 	rm -rf kernel/drivers/video/*.o
+	rm -rf kernel/drivers/*.o
