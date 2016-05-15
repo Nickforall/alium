@@ -1,3 +1,5 @@
+#include <stddef.h>
+#include <stdint.h>
 void screen_writestringat(const char* data, size_t index);
 void screen_initialize();
 size_t screen_createcursorpos(size_t y, size_t x);

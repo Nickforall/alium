@@ -1,6 +1,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "drivers/video/vga.h"
+#include "drivers/cpu/isr.h"
+#include "drivers/cpu/idt.h"
 
 //called by the assembly code in boot.S
 void kernel_main() {
@@ -11,4 +13,7 @@ void kernel_main() {
     screen_setcursorpos(3, 0);
     screen_write(">");
 
+    screen_setcursorpos(5, 0);
+
+    isr_install();
 }

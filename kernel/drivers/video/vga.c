@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "../ioports.h"
+#include "vga.h"
 
 //width/height of the vga driver
 static const size_t VGA_WIDTH = 80;
@@ -49,7 +50,7 @@ size_t screen_setcursorpos(size_t y, size_t x) {
     screen_cursor_column = x;
     screen_updatecursor();
 
-    return y * VGA_WIDTH + x;
+    return screen_currentcursorpos();
 }
 
 void screen_clear() {
@@ -88,7 +89,13 @@ void screen_writechar_at_index(char c, size_t cursor) {
 }
 
 void screen_writechar(char c) {
-    screen_writechar_at_index(c, screen_currentcursorpos());
+
+    if(c == '\n') {
+        screen_setcursorpos(screen_cursor_row + 1, 0);
+        return;
+    } else {
+        screen_writechar_at_index(c, screen_currentcursorpos());
+    }
 
     if(++screen_cursor_column == VGA_WIDTH) {
         screen_cursor_column = 0; //reset if we reached max width
